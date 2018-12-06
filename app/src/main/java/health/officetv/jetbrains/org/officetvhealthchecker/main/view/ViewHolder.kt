@@ -12,29 +12,26 @@ import health.officetv.jetbrains.org.officetvhealthchecker.main.model.ApiReposit
 import health.officetv.jetbrains.org.officetvhealthchecker.main.model.ViewHolderMenuItemAction
 import org.jetbrains.anko.*
 
-class ViewHolder(
-    context: Context,
-    private val adapter: BaseAdapter,
-    private val repository: ApiRepository
-) {
+class ViewHolder(private val adapter: BaseAdapter, private val repository: ApiRepository) {
 
-    @JvmField
-    val view = context.relativeLayout {
-        setPadding(dip(8), dip(4), dip(8), dip(4))
-        setRippleBackground()
-        lparams(width = matchParent)
-        relativeLayout {
-            id = R.id.test
-            createProgressView()
-            createResultIcon()
-        }.lparams(dip(36), dip(36)) {
-            addRule(RelativeLayout.ALIGN_PARENT_END)
-            addRule(RelativeLayout.CENTER_VERTICAL)
-        }
-        createTitleView()
-        createUrlView()
-        setOnLongClickListener {
-            onLongClick(it, context)
+    fun build(context: Context): View {
+        return context.relativeLayout {
+            setPadding(dip(8), dip(4), dip(8), dip(4))
+            setRippleBackground()
+            lparams(width = matchParent)
+            relativeLayout {
+                id = R.id.test
+                createProgressView()
+                createResultIcon()
+            }.lparams(dip(36), dip(36)) {
+                addRule(RelativeLayout.ALIGN_PARENT_END)
+                addRule(RelativeLayout.CENTER_VERTICAL)
+            }
+            createTitleView()
+            createUrlView()
+            setOnLongClickListener {
+                onLongClick(it, context)
+            }
         }
     }
 
@@ -72,13 +69,19 @@ class ViewHolder(
         progressBar {
             id = R.id.progress
             isIndeterminate = true
+        }.lparams {
+            centerInParent()
         }
     }
 
     private fun _RelativeLayout.createResultIcon() {
         imageView {
             id = R.id.result_icon
+            scaleX = 0f
+            scaleY = 0f
             visibility = View.GONE
+        }.lparams {
+            centerInParent()
         }
     }
 
