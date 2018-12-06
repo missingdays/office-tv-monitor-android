@@ -1,18 +1,15 @@
 package health.officetv.jetbrains.org.officetvhealthchecker.main.view
 
-import android.graphics.Color
-import android.graphics.PorterDuff
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import org.jetbrains.anko.*
 import health.officetv.jetbrains.org.officetvhealthchecker.R
 import health.officetv.jetbrains.org.officetvhealthchecker.main.MainActivityViewModel
 import health.officetv.jetbrains.org.officetvhealthchecker.main.model.Data
-
+import org.jetbrains.anko.*
 
 class MainActivityUI(private val mainActivityViewModel: MainActivityViewModel) :
     AnkoComponent<MainActivity> {
@@ -24,9 +21,8 @@ class MainActivityUI(private val mainActivityViewModel: MainActivityViewModel) :
             }.lparams { alignWithParent }
 
             val fab = FloatingActionButton(context).apply {
-                val drawable = context.getDrawable(android.R.drawable.ic_input_add)!!
-                drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
-                setImageResource(android.R.drawable.ic_input_add)
+                rotation = 45f
+                setImageResource(R.drawable.ic_cross)
                 setOnClickListener {
                     onFABclick(it)
                 }
