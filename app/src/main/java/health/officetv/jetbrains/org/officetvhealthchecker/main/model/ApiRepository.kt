@@ -2,8 +2,9 @@ package health.officetv.jetbrains.org.officetvhealthchecker.main.model
 
 import android.content.SharedPreferences
 
-class ApiRepository(private val sharedPreferences: SharedPreferences) :
-    Repository<String, Data> {
+class ApiRepository(
+    private val sharedPreferences: SharedPreferences
+) : Repository<String, Data> {
 
     override fun set(param: String, value: Data) {
         sharedPreferences.edit().putString(param, value.toSharedString()).apply()

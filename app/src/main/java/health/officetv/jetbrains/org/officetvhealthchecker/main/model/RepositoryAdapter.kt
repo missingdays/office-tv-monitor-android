@@ -6,17 +6,30 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import health.officetv.jetbrains.org.officetvhealthchecker.R
+import health.officetv.jetbrains.org.officetvhealthchecker.main.AccessibilityController
 import health.officetv.jetbrains.org.officetvhealthchecker.main.view.ViewHolder
+import io.reactivex.subjects.BehaviorSubject
 
 
-class RepositoryAdapter(private val repository: ApiRepository) : BaseAdapter() {
+class RepositoryAdapter(
+    private val repository: ApiRepository,
+    private val accessibilityController: AccessibilityController
+) : BaseAdapter() {
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View  {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val data = getItem(position)
-        return buildView(convertView, parent.context) { titleView, urlView ->
-            titleView.text = data.name
-            urlView.text = data.url
-            println(position)
+        return buildView(convertView, parent.context).apply {
+            findViewById<TextView>(R.id.text_name).text = data.name
+            findViewById<TextView>(R.id.text_url).text = data.url
+
+            accessibilityController.subjects[position]
+                ?: BehaviorSubject.create<Boolean>().apply {
+                    accessibilityController.subjects[position] = this
+                    accessibilityController.requestCheck(position)
+                    subscribe {
+                        println("$position\t$it")
+                    }
+                }
         }
     }
 
@@ -26,12 +39,12 @@ class RepositoryAdapter(private val repository: ApiRepository) : BaseAdapter() {
 
     override fun getCount() = repository.size()
 
-    private fun buildView(convertView: View?, context: Context, action: (TextView, TextView) -> Unit): View {
-        return convertView ?: ViewHolder(context, this@RepositoryAdapter, repository).view.apply {
-            val title = findViewById<TextView>(R.id.text_name)
-            val url = findViewById<TextView>(R.id.text_url)
-            action(title, url)
-        }
+    private fun buildView(convertView: View?, context: Context): View {
+        return convertView ?: ViewHolder(context, this@RepositoryAdapter, repository).view
     }
 
+    override fun notifyDataSetChanged() {
+        accessibilityController.notifyDataSetChanged()
+        super.notifyDataSetChanged()
+    }
 }
