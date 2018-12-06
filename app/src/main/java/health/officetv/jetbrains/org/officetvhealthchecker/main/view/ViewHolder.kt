@@ -12,6 +12,7 @@ import health.officetv.jetbrains.org.officetvhealthchecker.main.model.ApiReposit
 import health.officetv.jetbrains.org.officetvhealthchecker.main.model.Data
 import org.jetbrains.anko.*
 
+
 class ViewHolder(
     context: Context,
     private val adapter: BaseAdapter,
@@ -21,13 +22,20 @@ class ViewHolder(
     @JvmField
     val view = context.relativeLayout {
         setPadding(dip(8), dip(4), dip(8), dip(4))
-        isLongClickable = true
+        setRippleBackground()
         lparams(width = matchParent)
         createTitleView()
         createUrlView()
         setOnLongClickListener {
             onLongClick(it, context)
         }
+    }
+
+    private fun _RelativeLayout.setRippleBackground() {
+        val attrs = intArrayOf(android.R.attr.selectableItemBackground)
+        val typedArray = context.obtainStyledAttributes(attrs)
+        backgroundResource = typedArray.getResourceId(0, 0)
+        typedArray.recycle()
     }
 
     private fun _RelativeLayout.createTitleView() {
@@ -46,7 +54,7 @@ class ViewHolder(
             id = R.id.text_url
             setPadding(dip(8), 0, 0, 0)
             singleLine = true
-        }.lparams(width = matchParent, height = dip(20)) {
+        }.lparams(width = matchParent, height = dip(24)) {
             below(R.id.text_name)
         }
     }
