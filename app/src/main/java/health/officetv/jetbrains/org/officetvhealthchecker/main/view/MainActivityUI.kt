@@ -60,10 +60,12 @@ class MainActivityUI(private val mainActivityViewModel: MainActivityViewModel) :
             setPositiveButton(R.string.add) { dialog, _ ->
                 val name = view.findViewById<TextView>(R.id.text_name).text.toString()
                 val url = view.findViewById<TextView>(R.id.text_url).text.toString()
+                if (name.isBlank() || url.isBlank()) {
+                    return@setPositiveButton
+                }
                 val data = Data(name, url)
                 mainActivityViewModel.repository.set(data.name, data)
                 mainActivityViewModel.repositoryAdapter.notifyDataSetChanged()
-                dialog.dismiss()
             }
         }.create().show()
     }
