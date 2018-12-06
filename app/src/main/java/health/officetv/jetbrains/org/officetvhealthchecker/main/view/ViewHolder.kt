@@ -5,13 +5,12 @@ import android.graphics.Color
 import android.view.View
 import android.widget.BaseAdapter
 import android.widget.PopupMenu
+import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.annotation.IdRes
 import health.officetv.jetbrains.org.officetvhealthchecker.R
 import health.officetv.jetbrains.org.officetvhealthchecker.main.model.ApiRepository
-import health.officetv.jetbrains.org.officetvhealthchecker.main.model.Data
+import health.officetv.jetbrains.org.officetvhealthchecker.main.model.ViewHolderMenuItemAction
 import org.jetbrains.anko.*
-
 
 class ViewHolder(
     context: Context,
@@ -24,6 +23,14 @@ class ViewHolder(
         setPadding(dip(8), dip(4), dip(8), dip(4))
         setRippleBackground()
         lparams(width = matchParent)
+        relativeLayout {
+            id = R.id.test
+            createProgressView()
+            createResultIcon()
+        }.lparams(dip(36), dip(36)) {
+            addRule(RelativeLayout.ALIGN_PARENT_END)
+            addRule(RelativeLayout.CENTER_VERTICAL)
+        }
         createTitleView()
         createUrlView()
         setOnLongClickListener {
@@ -46,6 +53,7 @@ class ViewHolder(
             singleLine = true
         }.lparams(width = matchParent, height = dip(30)) {
             alignParentTop()
+            leftOf(R.id.test)
         }
     }
 
@@ -56,6 +64,21 @@ class ViewHolder(
             singleLine = true
         }.lparams(width = matchParent, height = dip(24)) {
             below(R.id.text_name)
+            leftOf(R.id.test)
+        }
+    }
+
+    private fun _RelativeLayout.createProgressView() {
+        progressBar {
+            id = R.id.progress
+            isIndeterminate = true
+        }
+    }
+
+    private fun _RelativeLayout.createResultIcon() {
+        imageView {
+            id = R.id.result_icon
+            visibility = View.GONE
         }
     }
 
@@ -70,37 +93,5 @@ class ViewHolder(
             show()
         }
         return true
-    }
-
-    abstract class MenuItemAction {
-        abstract fun build(@IdRes id: Int): Action
-    }
-
-    class ViewHolderMenuItemAction(
-        private val adapter: BaseAdapter,
-        private val repository: ApiRepository
-    ) : MenuItemAction() {
-
-        override fun build(id: Int): Action {
-            return when (id) {
-                R.id.product_remove -> RemoveAction(adapter, repository)
-                else -> throw IllegalArgumentException("wtf")
-            }
-        }
-    }
-
-    interface Action {
-        fun perform(data: Data): Boolean
-    }
-
-    class RemoveAction(
-        private val adapter: BaseAdapter,
-        private val repository: ApiRepository
-    ) : Action {
-        override fun perform(data: Data): Boolean {
-            repository.remove(data.name)
-            adapter.notifyDataSetChanged()
-            return true
-        }
     }
 }

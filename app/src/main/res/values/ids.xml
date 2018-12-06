@@ -3,4 +3,7 @@
     <item name="text1" type="id"/>
     <item name="text_name" type="id"/>
     <item name="text_url" type="id"/>
+    <item name="test" type="id"/>
+    <item name="result_icon" type="id"/>
+    <item name="progress" type="id"/>
 </resources>
