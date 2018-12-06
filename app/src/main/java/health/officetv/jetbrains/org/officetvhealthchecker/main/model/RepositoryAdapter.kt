@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import health.officetv.jetbrains.org.officetvhealthchecker.R
-import health.officetv.jetbrains.org.officetvhealthchecker.main.AccessibilityController
 import health.officetv.jetbrains.org.officetvhealthchecker.main.view.ViewHolder
 import io.reactivex.subjects.BehaviorSubject
 
