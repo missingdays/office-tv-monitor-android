@@ -12,7 +12,7 @@ class RepositoryAdapter(private val repository: ApiRepository) : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View = with(parent.context) {
         val data = getItem(position)
-        val view = convertView ?: ViewHolder(this).view
+        val view = convertView ?: ViewHolder(this, this@RepositoryAdapter, repository).view
         view.findViewById<TextView>(R.id.text_name).text = data.name
         view.findViewById<TextView>(R.id.text_url).text = data.url
         return@with view

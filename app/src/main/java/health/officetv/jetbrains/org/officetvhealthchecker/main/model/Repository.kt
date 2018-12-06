@@ -6,4 +6,5 @@ interface Repository<K, V> {
     fun set(param: K, value: V)
     fun getAll(): List<V>
     fun size() = getAll().size
+    fun remove(param: K)
 }

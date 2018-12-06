@@ -17,6 +17,10 @@ class ApiRepository(private val sharedPreferences: SharedPreferences) :
         return Data.fromSharedString(res)
     }
 
+    override fun remove(param: String) {
+        sharedPreferences.edit().remove(param).apply()
+    }
+
     override fun getAll(): List<Data> {
         return sharedPreferences.all.values.map {
             Data.fromSharedString(it as String)

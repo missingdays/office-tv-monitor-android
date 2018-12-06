@@ -4,4 +4,5 @@
     <string name="url">Url</string>
     <string name="cancel">Cancel</string>
     <string name="add">Add</string>
+    <string name="remove">Remove</string>
 </resources>
