@@ -26,11 +26,11 @@ class AccessibilityController(
         try {
             withTimeout(15000) {
                 if (client.get(data.url).code() == 200) {
-                    subjects[position]!!.onNext(true)
+                    subjects[position]?.onNext(true)
                 } else throw Exception()
             }
         } catch (e: Exception) {
-            subjects[position]!!.onNext(false)
+            subjects[position]?.onNext(false)
         }
     }
 
