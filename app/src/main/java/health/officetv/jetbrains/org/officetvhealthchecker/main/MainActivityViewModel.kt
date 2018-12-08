@@ -13,7 +13,7 @@ class MainActivityViewModel(
     @JvmField val client: HttpClient
 ) : ViewModel() {
 
-    private val accessibilityController =
+    val accessibilityController =
         AccessibilityController(repository, client)
     val repositoryAdapter = RepositoryAdapter(repository, accessibilityController)
 

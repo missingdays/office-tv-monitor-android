@@ -8,12 +8,19 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import java.lang.Exception
 
+
+enum class STATE {
+    REFRESHING,
+    OK,
+    FAILED
+}
+
 class AccessibilityController(
     private val apiRepository: ApiRepository,
     private val client: HttpClient
 ) {
 
-    var subjects = Array<BehaviorSubject<Boolean>?>(apiRepository.size()) { null }
+    var subjects = Array<BehaviorSubject<STATE>?>(apiRepository.size()) { null }
         private set
 
     private val lockedPositions = HashSet<Int>()
@@ -26,12 +33,20 @@ class AccessibilityController(
 
     fun requestCheck(position: Int) = GlobalScope.launch {
         if (lockedPositions.contains(position)) return@launch
+
+        val subject = subjects[position]
+
         try {
+            subject?.onNext(STATE.REFRESHING)
+
             lockedPositions.add(position)
             val data = apiRepository.getAll()[position]
+
             val health = getHealth(data.url)
 
-            subjects[position]?.onNext(health)
+            val state = if (health) STATE.OK else STATE.FAILED
+
+            subjects[position]?.onNext(state)
 
         } finally {
             delay(1000)

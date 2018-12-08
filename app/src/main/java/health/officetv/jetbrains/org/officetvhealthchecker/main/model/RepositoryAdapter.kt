@@ -44,22 +44,42 @@ class RepositoryAdapter(
         observer.subscribe {
 
             Handler(Looper.getMainLooper()).post {
-                val drawable = if (it) {
-                    resultView.setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP)
-                    ContextCompat.getDrawable(parent.context, R.drawable.ic_check)
-                } else {
-                    resultView.setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP)
-                    ContextCompat.getDrawable(parent.context, R.drawable.ic_cross)
+                when (it) {
+                    STATE.OK -> stateIsOk(parent.context, resultView, progressView)
+                    STATE.REFRESHING -> stateIsRefresh(parent.context, resultView, progressView)
+                    STATE.FAILED -> stateIsFail(parent.context, resultView, progressView)
                 }
-                resultView.setImageDrawable(drawable)
-                ProgressBarAnimator(progressView).animate()
-                ResultViewAnimator(resultView).animate()
             }
 
         }
 
         return view
     }
+
+    private fun stateIsOk(context: Context, resultView: ImageView, progressView: ProgressBar) {
+        val drawable = context.getDrawable(R.drawable.ic_check)
+        resultView.setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP)
+        resultView.setImageDrawable(drawable)
+        ProgressBarAnimator(progressView).animate()
+        ResultViewAnimator(resultView).animate()
+    }
+
+    private fun stateIsFail(context: Context, resultView: ImageView, progressView: ProgressBar) {
+        val drawable = context.getDrawable(R.drawable.ic_cross)
+        resultView.setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP)
+        resultView.setImageDrawable(drawable)
+        ProgressBarAnimator(progressView).animate()
+        ResultViewAnimator(resultView).animate()
+    }
+
+    private fun stateIsRefresh(context: Context, resultView: ImageView, progressView: ProgressBar) {
+        resultView.visibility = View.GONE
+        progressView.apply {
+            scaleX = 1f
+            scaleY = 1f
+        }.visibility = View.VISIBLE
+    }
+
 
 
     override fun getItem(position: Int) = repository.getAll()[position]
