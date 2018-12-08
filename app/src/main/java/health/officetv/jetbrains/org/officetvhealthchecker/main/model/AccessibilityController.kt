@@ -29,20 +29,28 @@ class AccessibilityController(
         try {
             lockedPositions.add(position)
             val data = apiRepository.getAll()[position]
-            try {
-                withTimeout(15000) {
-                    if (client.get(data.url).code() == 200) {
-                        subjects[position]?.onNext(true)
-                    } else throw Exception()
-                }
-            } catch (e: Exception) {
-                subjects[position]?.onNext(false)
-            }
+            val health = getHealth(data.url)
+
+            subjects[position]?.onNext(health)
+
         } finally {
             delay(1000)
             lockedPositions.remove(position)
         }
+    }
 
+    private suspend fun getHealth(url: String) : Boolean {
+        return try {
+            val result = withTimeout(5000) {
+                client.get("$url/health")
+            }
+
+            result.code() == 200
+        } catch (e: Exception) {
+            println(e)
+
+            false
+        }
     }
 
 }

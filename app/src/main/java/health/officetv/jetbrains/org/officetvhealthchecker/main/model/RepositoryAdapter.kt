@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.PostProcessor
 import android.os.Handler
 import android.os.Looper
 import android.view.View
@@ -13,6 +14,7 @@ import health.officetv.jetbrains.org.officetvhealthchecker.main.view.ViewHolder
 import io.reactivex.subjects.BehaviorSubject
 import org.jetbrains.anko.backgroundColor
 import android.widget.*
+import androidx.core.content.ContextCompat
 
 
 class RepositoryAdapter(
@@ -40,17 +42,15 @@ class RepositoryAdapter(
         accessibilityController.requestCheck(position)
 
         observer.subscribe {
-            val drawable = if (it) {
-                parent.context.getDrawable(R.drawable.ic_check)!!.apply {
-                    setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP)
-                }
-            } else {
-                parent.context.getDrawable(R.drawable.ic_cross)!!.apply {
-                    setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP)
-                }
-            }
 
             Handler(Looper.getMainLooper()).post {
+                val drawable = if (it) {
+                    resultView.setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP)
+                    ContextCompat.getDrawable(parent.context, R.drawable.ic_check)
+                } else {
+                    resultView.setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP)
+                    ContextCompat.getDrawable(parent.context, R.drawable.ic_cross)
+                }
                 resultView.setImageDrawable(drawable)
                 ProgressBarAnimator(progressView).animate()
                 ResultViewAnimator(resultView).animate()

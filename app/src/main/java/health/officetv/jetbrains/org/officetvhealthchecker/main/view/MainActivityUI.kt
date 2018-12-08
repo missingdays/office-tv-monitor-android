@@ -10,12 +10,14 @@ import health.officetv.jetbrains.org.officetvhealthchecker.R
 import health.officetv.jetbrains.org.officetvhealthchecker.main.MainActivityViewModel
 import health.officetv.jetbrains.org.officetvhealthchecker.main.model.Data
 import org.jetbrains.anko.*
+import org.jetbrains.anko.support.v4.swipeRefreshLayout
 
 class MainActivityUI(private val mainActivityViewModel: MainActivityViewModel) :
     AnkoComponent<MainActivity> {
 
     override fun createView(ui: AnkoContext<MainActivity>) = with(ui) {
         relativeLayout {
+
             listView {
                 adapter = mainActivityViewModel.repositoryAdapter
             }.lparams { alignWithParent }
