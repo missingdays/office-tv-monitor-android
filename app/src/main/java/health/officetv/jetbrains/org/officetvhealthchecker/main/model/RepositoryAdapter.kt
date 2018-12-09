@@ -41,18 +41,15 @@ class RepositoryAdapter(
         }
         accessibilityController.requestCheck(position)
 
-        observer.subscribe {
-
+        observer.subscribe { state ->
             Handler(Looper.getMainLooper()).post {
-                when (it) {
+                when (state) {
                     STATE.OK -> stateIsOk(parent.context, resultView, progressView)
                     STATE.REFRESHING -> stateIsRefresh(parent.context, resultView, progressView)
                     STATE.FAILED -> stateIsFail(parent.context, resultView, progressView)
                 }
             }
-
         }
-
         return view
     }
 
@@ -73,13 +70,9 @@ class RepositoryAdapter(
     }
 
     private fun stateIsRefresh(context: Context, resultView: ImageView, progressView: ProgressBar) {
+        ProgressBarReverseAnimator(progressView).animate()
         resultView.visibility = View.GONE
-        progressView.apply {
-            scaleX = 1f
-            scaleY = 1f
-        }.visibility = View.VISIBLE
     }
-
 
 
     override fun getItem(position: Int) = repository.getAll()[position]

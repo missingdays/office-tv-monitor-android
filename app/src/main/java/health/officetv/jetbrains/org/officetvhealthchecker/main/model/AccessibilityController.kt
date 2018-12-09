@@ -55,6 +55,7 @@ class AccessibilityController(
     }
 
     private suspend fun getHealth(url: String) : Boolean {
+        delay(200)
         return try {
             val result = withTimeout(5000) {
                 client.get("$url/health")

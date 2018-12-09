@@ -29,6 +29,18 @@ class ProgressBarAnimator(target: ProgressBar) : ViewAnimator(target) {
     }
 }
 
+class ProgressBarReverseAnimator(target: ProgressBar): ViewAnimator(target) {
+    override fun animate() {
+        target.animate().setDuration(200)
+            .scaleY(1f).scaleX(1f)
+            .setListener(object : AnimListener() {
+                override fun onAnimationEnd(animation: android.animation.Animator?) {
+                    target.visibility = View.VISIBLE
+                }
+            }).start()
+    }
+}
+
 class ResultViewAnimator(target: ImageView): ViewAnimator(target) {
     override fun animate() {
         target.visibility = View.VISIBLE
