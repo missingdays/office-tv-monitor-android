@@ -28,7 +28,9 @@ class MainActivityUI(private val mainActivityViewModel: MainActivityViewModel) :
                 relativeLayout {
                     listView {
                         adapter = mainActivityViewModel.repositoryAdapter
-                    }.lparams { alignWithParent }
+                    }.lparams(matchParent, matchParent) {
+                        alignWithParent
+                    }
 
                     val fab = FloatingActionButton(context).apply {
                         rotation = 45f
