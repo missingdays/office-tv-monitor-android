@@ -49,33 +49,31 @@ class MainActivityUI(private val mainActivityViewModel: MainActivityViewModel) :
     }
 
     private fun onFABclick(fab: View) {
-        AlertDialog.Builder(fab.context).apply {
-            val view = context.verticalLayout {
-                editText {
-                    id = R.id.text_name
-                    hintResource = R.string.name
-                    inputType = EditorInfo.TYPE_TEXT_VARIATION_PERSON_NAME
-                }.lparams(width = matchParent, height = dip(50))
-                editText {
-                    id = R.id.text_url
-                    hintResource = R.string.url
-                    inputType = EditorInfo.TYPE_TEXT_VARIATION_URI
-                }.lparams(width = matchParent, height = dip(50))
-            }
-            setView(view)
-            setNegativeButton(R.string.cancel) { dialog, _ ->
-                dialog.dismiss()
-            }
-            setPositiveButton(R.string.add) { dialog, _ ->
-                val name = view.findViewById<TextView>(R.id.text_name).text.toString()
-                val url = view.findViewById<TextView>(R.id.text_url).text.toString()
-                if (name.isBlank() || url.isBlank()) {
-                    return@setPositiveButton
-                }
-                val data = Data(name, url)
-                mainActivityViewModel.repository.set(data.name, data)
-                mainActivityViewModel.repositoryAdapter.notifyDataSetChanged()
-            }
-        }.create().show()
+        DataInputView(fab.context).apply {
+            builder.apply {
+                setNegativeButton()
+                setPositiveButton(titleTextView, urlTextView)
+            }.create().show()
+        }
+    }
+
+    private fun AlertDialog.Builder.setNegativeButton() {
+        setNegativeButton(R.string.cancel) { dialog, _ ->
+            dialog.dismiss()
+        }
+    }
+
+    private fun AlertDialog.Builder.setPositiveButton(
+        titleTextView: TextView,
+        urlTextView: TextView
+    ) {
+        setPositiveButton(R.string.add) { _, _ ->
+            val name = titleTextView.text.toString()
+            val url = urlTextView.text.toString()
+            if (name.isBlank() || url.isBlank()) return@setPositiveButton
+            val data = Data(name, url)
+            mainActivityViewModel.repository.set(data.name, data)
+            mainActivityViewModel.repositoryAdapter.notifyDataSetChanged()
+        }
     }
 }
