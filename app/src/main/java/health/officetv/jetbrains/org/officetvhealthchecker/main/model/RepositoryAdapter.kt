@@ -22,7 +22,7 @@ class RepositoryAdapter(private val mainActivityViewModel: MainActivityViewModel
     @SuppressLint("CheckResult")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val data = getItem(position)
-        val view = ViewHolder(mainActivityViewModel).build(parent.context)
+        val view = convertView ?: ViewHolder(mainActivityViewModel).build(parent.context)
         val titleView = view.findViewById<TextView>(R.id.text_name)
         val urlView = view.findViewById<TextView>(R.id.text_url)
         val progressView = view.findViewById<ProgressBar>(R.id.progress)
@@ -31,17 +31,19 @@ class RepositoryAdapter(private val mainActivityViewModel: MainActivityViewModel
         titleView.text = data.name
         urlView.text = data.url
 
-        accessibilityController.observable.subscribe {
-            if (it.position != position) return@subscribe
-            Handler(Looper.getMainLooper()).post {
-                when (it) {
-                    is State.Ok -> stateIsOk(parent.context, resultView, progressView)
-                    is State.Fail -> stateIsFail(parent.context, resultView, progressView)
-                    is State.Refresh -> stateIsRefresh(parent.context, resultView, progressView)
+        if (convertView == null) {
+            accessibilityController.observable.subscribe {
+                if (it.position != position) return@subscribe
+                Handler(Looper.getMainLooper()).post {
+                    when (it) {
+                        is State.Ok -> stateIsOk(parent.context, resultView, progressView)
+                        is State.Fail -> stateIsFail(parent.context, resultView, progressView)
+                        is State.Refresh -> stateIsRefresh(parent.context, resultView, progressView)
+                    }
                 }
             }
+            accessibilityController.requestCheckWithLock(position)
         }
-        accessibilityController.requestCheckWithLock(position)
         return view
     }
 
