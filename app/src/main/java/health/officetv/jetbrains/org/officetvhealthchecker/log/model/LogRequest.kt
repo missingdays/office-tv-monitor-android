@@ -26,7 +26,11 @@ class LogRequest(
 
     @SuppressLint("CheckResult")
     fun subscribe(action: (String) -> Unit) {
-        logs = BehaviorSubject.create()
+        val log = BehaviorSubject.create<String>()
+        if (logs.hasValue()) {
+            log.onNext(logs.value!!)
+        }
+        logs = log
         Handler(Looper.getMainLooper()).post {
             logs.subscribe(action)
         }

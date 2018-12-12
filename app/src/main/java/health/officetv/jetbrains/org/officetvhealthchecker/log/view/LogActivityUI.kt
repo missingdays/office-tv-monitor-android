@@ -53,6 +53,7 @@ class LogActivityUI(
 
                 nestedScrollView {
                     textView {
+                        println(logRequest.hasValue)
                         if (logRequest.hasValue) {
                             text = logRequest.value
                         } else {
