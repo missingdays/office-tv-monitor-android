@@ -1,6 +1,8 @@
 package health.officetv.jetbrains.org.officetvhealthchecker.main.model
 
-data class Data(val name: String, val url: String) {
+import java.io.Serializable
+
+data class Data(val name: String, val url: String): Serializable {
     companion object {
         fun fromSharedString(str: String): Data {
             val (name, url) = str.split(",")
