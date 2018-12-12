@@ -19,6 +19,16 @@ class LogActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         LogActivityUI(logActivityViewModel).setContentView(this)
+
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
 }
