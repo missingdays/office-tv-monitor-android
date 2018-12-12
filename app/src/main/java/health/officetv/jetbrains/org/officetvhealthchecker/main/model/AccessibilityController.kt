@@ -6,7 +6,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
-import java.lang.Exception
 
 sealed class State(val position: Int) {
     class Refresh(position: Int): State(position)

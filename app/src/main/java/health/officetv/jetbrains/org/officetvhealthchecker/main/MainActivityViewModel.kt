@@ -10,12 +10,11 @@ import health.officetv.jetbrains.org.officetvhealthchecker.network.HttpClient
 
 class MainActivityViewModel(
     @JvmField val repository: ApiRepository,
-    @JvmField val client: HttpClient
+    @JvmField val accessibilityController: AccessibilityController
 ) : ViewModel() {
 
-    val accessibilityController =
-        AccessibilityController(repository, client)
-    val repositoryAdapter = RepositoryAdapter(this)
+    lateinit var repositoryAdapter: RepositoryAdapter
+        private set
 
     class Factory(
         private val sharedPreferences: SharedPreferences,
@@ -25,7 +24,10 @@ class MainActivityViewModel(
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return if (modelClass == MainActivityViewModel::class.java) {
                 val repository = ApiRepository(sharedPreferences)
-                MainActivityViewModel(repository, httpClient) as T
+                val accessibilityController = AccessibilityController(repository, httpClient)
+                val viewModel = MainActivityViewModel(repository, accessibilityController)
+                viewModel.repositoryAdapter = RepositoryAdapter(viewModel)
+                return viewModel as T
             } else super.create(modelClass)
         }
     }
