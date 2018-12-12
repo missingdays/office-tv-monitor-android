@@ -44,20 +44,7 @@ class RepositoryAdapter(private val mainActivityViewModel: MainActivityViewModel
                 }
             }
         }
-
         accessibilityController.requestCheck(position)
-
-
-
-//        observer.subscribe { state ->
-//            Handler(Looper.getMainLooper()).post {
-//                when (state) {
-//                    STATE.OK -> stateIsOk(parent.context, resultView, progressView)
-//                    STATE.REFRESHING -> stateIsRefresh(parent.context, resultView, progressView)
-//                    STATE.FAILED -> stateIsFail(parent.context, resultView, progressView)
-//                }
-//            }
-//        }
         return view
     }
 
