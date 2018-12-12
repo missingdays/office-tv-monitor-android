@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import health.officetv.jetbrains.org.officetvhealthchecker.R
 import health.officetv.jetbrains.org.officetvhealthchecker.log.LogActivityViewModel
 import org.jetbrains.anko.*
+import org.jetbrains.anko.support.v4.nestedScrollView
 import org.jetbrains.anko.support.v4.onRefresh
 import org.jetbrains.anko.support.v4.swipeRefreshLayout
 
@@ -50,7 +51,7 @@ class LogActivityUI(
                     alignParentTop()
                 }
 
-                scrollView {
+                nestedScrollView {
                     textView {
                         if (logRequest.hasValue) {
                             text = logRequest.value
