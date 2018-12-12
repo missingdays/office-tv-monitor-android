@@ -3,15 +3,11 @@ package health.officetv.jetbrains.org.officetvhealthchecker.main.view
 import android.content.Context
 import android.graphics.Color
 import android.view.View
-import android.widget.PopupMenu
 import android.widget.RelativeLayout
-import android.widget.TextView
 import health.officetv.jetbrains.org.officetvhealthchecker.R
-import health.officetv.jetbrains.org.officetvhealthchecker.main.MainActivityViewModel
-import health.officetv.jetbrains.org.officetvhealthchecker.main.model.ViewHolderMenuItemAction
 import org.jetbrains.anko.*
 
-class ViewHolder(private val mainActivityViewModel: MainActivityViewModel) {
+class ViewHolder {
 
     fun build(context: Context): View {
         return context.relativeLayout {
@@ -28,9 +24,6 @@ class ViewHolder(private val mainActivityViewModel: MainActivityViewModel) {
             }
             createTitleView()
             createUrlView()
-            setOnLongClickListener {
-                onLongClick(it, context)
-            }
         }
     }
 
@@ -82,21 +75,5 @@ class ViewHolder(private val mainActivityViewModel: MainActivityViewModel) {
         }.lparams {
             centerInParent()
         }
-    }
-
-    private fun onLongClick(view: View, context: Context): Boolean {
-        val title = view.findViewById<TextView>(R.id.text_name).text.toString()
-        val menuItemAction = ViewHolderMenuItemAction()
-        PopupMenu(context, view).apply {
-            inflate(R.menu.product_menu)
-            setOnMenuItemClickListener {
-                menuItemAction
-                    .buildFactory(it.itemId)
-                    .buildAction(mainActivityViewModel)
-                    .perform(context, mainActivityViewModel.repository.get(title))
-            }
-            show()
-        }
-        return true
     }
 }

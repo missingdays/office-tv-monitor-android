@@ -13,7 +13,6 @@ import health.officetv.jetbrains.org.officetvhealthchecker.R
 import health.officetv.jetbrains.org.officetvhealthchecker.main.MainActivityViewModel
 import health.officetv.jetbrains.org.officetvhealthchecker.main.view.ViewHolder
 
-
 class RepositoryAdapter(private val mainActivityViewModel: MainActivityViewModel) : BaseAdapter() {
 
     private val repository = mainActivityViewModel.repository
@@ -21,8 +20,9 @@ class RepositoryAdapter(private val mainActivityViewModel: MainActivityViewModel
 
     @SuppressLint("CheckResult")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+//        println("$position\t${convertView != null}")
         val data = getItem(position)
-        val view = convertView ?: ViewHolder(mainActivityViewModel).build(parent.context)
+        val view = convertView ?: ViewHolder().build(parent.context)
         val titleView = view.findViewById<TextView>(R.id.text_name)
         val urlView = view.findViewById<TextView>(R.id.text_url)
         val progressView = view.findViewById<ProgressBar>(R.id.progress)
@@ -35,6 +35,7 @@ class RepositoryAdapter(private val mainActivityViewModel: MainActivityViewModel
             accessibilityController.observable.subscribe {
                 if (it.position != position) return@subscribe
                 Handler(Looper.getMainLooper()).post {
+//                    println("$position\t${it.javaClass.simpleName}")
                     when (it) {
                         is State.Ok -> stateIsOk(parent.context, resultView, progressView)
                         is State.Fail -> stateIsFail(parent.context, resultView, progressView)
