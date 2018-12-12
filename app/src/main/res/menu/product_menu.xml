@@ -4,6 +4,9 @@
     <item android:id="@+id/product_modify"
           android:title="@string/modify"/>
 
+    <item android:id="@+id/product_update"
+          android:title="@string/update"/>
+
     <item android:id="@+id/product_remove"
           android:title="@string/remove"/>
 </menu>

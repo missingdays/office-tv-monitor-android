@@ -1,15 +1,11 @@
 package health.officetv.jetbrains.org.officetvhealthchecker.main.view
 
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import health.officetv.jetbrains.org.officetvhealthchecker.R
 import health.officetv.jetbrains.org.officetvhealthchecker.main.MainActivityViewModel
-import health.officetv.jetbrains.org.officetvhealthchecker.main.model.Data
 import org.jetbrains.anko.*
 
 class MainActivityUI(private val mainActivityViewModel: MainActivityViewModel) :
@@ -21,7 +17,7 @@ class MainActivityUI(private val mainActivityViewModel: MainActivityViewModel) :
 
                 setOnRefreshListener {
                     (0 until mainActivityViewModel.repository.getAll().size).forEach {
-                        mainActivityViewModel.accessibilityController.requestCheck(it)
+                        mainActivityViewModel.accessibilityController.requestCheckWithLock(it)
                     }
                     isRefreshing = false
                 }

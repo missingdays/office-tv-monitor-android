@@ -12,6 +12,14 @@ interface HttpClient {
         fun stream(): InputStream
         fun body(): String
         fun code(): Int
+
+        companion object {
+            val BAD = object : HttpGet {
+                override fun stream() = ByteArrayInputStream(body().toByteArray())
+                override fun body() = ""
+                override fun code() = 404
+            }
+        }
     }
 }
 

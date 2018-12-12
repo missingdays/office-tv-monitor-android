@@ -41,7 +41,7 @@ class RepositoryAdapter(private val mainActivityViewModel: MainActivityViewModel
                 }
             }
         }
-        accessibilityController.requestCheck(position)
+        accessibilityController.requestCheckWithLock(position)
         return view
     }
 

@@ -17,7 +17,7 @@ class ViewHolderMenuItemAction : MenuItemAction() {
         return when (id) {
             R.id.product_remove -> RemoveActionFactory()
             R.id.product_modify -> ModifyActionFactory()
-//            R.id.product_update -> UpdateActionFactory()
+            R.id.product_update -> UpdateActionFactory()
             else -> throw IllegalArgumentException("wtf")
         }
     }
@@ -89,7 +89,7 @@ class UpdateAction(
     override fun perform(context: Context, data: Data): Boolean {
         val pos = mainActivityViewModel.repository.getAll().indexOf(data)
         println("Pos: $pos")
-        mainActivityViewModel.accessibilityController.requestCheck(pos)
+        mainActivityViewModel.accessibilityController.requestCheckWithLock(pos)
         return true
     }
 }
