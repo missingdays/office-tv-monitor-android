@@ -15,7 +15,6 @@ import android.widget.TextView
 import health.officetv.jetbrains.org.officetvhealthchecker.R
 import health.officetv.jetbrains.org.officetvhealthchecker.main.MainActivityViewModel
 import health.officetv.jetbrains.org.officetvhealthchecker.main.view.ViewHolder
-import io.reactivex.subjects.BehaviorSubject
 
 
 class RepositoryAdapter(private val mainActivityViewModel: MainActivityViewModel) : BaseAdapter() {
@@ -35,22 +34,30 @@ class RepositoryAdapter(private val mainActivityViewModel: MainActivityViewModel
         titleView.text = data.name
         urlView.text = data.url
 
-        var observer = accessibilityController.subjects[position]
-        if (observer == null) {
-            observer = BehaviorSubject.create()
-            accessibilityController.subjects[position] = observer
-        }
-        accessibilityController.requestCheck(position)
-
-        observer.subscribe { state ->
+        accessibilityController.observable.subscribe {
+            if (it.position != position) return@subscribe
             Handler(Looper.getMainLooper()).post {
-                when (state) {
-                    STATE.OK -> stateIsOk(parent.context, resultView, progressView)
-                    STATE.REFRESHING -> stateIsRefresh(parent.context, resultView, progressView)
-                    STATE.FAILED -> stateIsFail(parent.context, resultView, progressView)
+                when (it) {
+                    is State.Ok -> stateIsOk(parent.context, resultView, progressView)
+                    is State.Fail -> stateIsFail(parent.context, resultView, progressView)
+                    is State.Refresh -> stateIsRefresh(parent.context, resultView, progressView)
                 }
             }
         }
+
+        accessibilityController.requestCheck(position)
+
+
+
+//        observer.subscribe { state ->
+//            Handler(Looper.getMainLooper()).post {
+//                when (state) {
+//                    STATE.OK -> stateIsOk(parent.context, resultView, progressView)
+//                    STATE.REFRESHING -> stateIsRefresh(parent.context, resultView, progressView)
+//                    STATE.FAILED -> stateIsFail(parent.context, resultView, progressView)
+//                }
+//            }
+//        }
         return view
     }
 
@@ -81,9 +88,4 @@ class RepositoryAdapter(private val mainActivityViewModel: MainActivityViewModel
     override fun getItemId(position: Int) = position.toLong()
 
     override fun getCount() = repository.size()
-
-    override fun notifyDataSetChanged() {
-        accessibilityController.notifyDataSetChanged()
-        super.notifyDataSetChanged()
-    }
 }

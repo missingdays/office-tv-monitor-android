@@ -8,11 +8,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import java.lang.Exception
 
-
-enum class STATE {
-    REFRESHING,
-    OK,
-    FAILED
+sealed class State(val position: Int) {
+    class Refresh(position: Int): State(position)
+    class Fail(position: Int): State(position)
+    class Ok(position: Int): State(position)
 }
 
 class AccessibilityController(
@@ -20,33 +19,23 @@ class AccessibilityController(
     private val client: HttpClient
 ) {
 
-    var subjects = Array<BehaviorSubject<STATE>?>(apiRepository.size()) { null }
-        private set
+    val observable = BehaviorSubject.create<State>()
 
     private val lockedPositions = HashSet<Int>()
-
-    fun notifyDataSetChanged() {
-        subjects = Array(apiRepository.size()) {
-            subjects.getOrNull(it)
-        }
-    }
 
     fun requestCheck(position: Int) = GlobalScope.launch {
         if (lockedPositions.contains(position)) return@launch
 
-        val subject = subjects[position]
-
         try {
-            subject?.onNext(STATE.REFRESHING)
+            observable.onNext(State.Refresh(position))
 
             lockedPositions.add(position)
             val data = apiRepository.getAll()[position]
 
             val health = getHealth(data.url)
 
-            val state = if (health) STATE.OK else STATE.FAILED
-
-            subjects[position]?.onNext(state)
+            val state = if (health) State.Ok(position) else State.Fail(position)
+            observable.onNext(state)
 
         } finally {
             delay(1000)
@@ -63,8 +52,7 @@ class AccessibilityController(
 
             result.code() == 200
         } catch (e: Exception) {
-            println(e)
-
+            e.printStackTrace()
             false
         }
     }
