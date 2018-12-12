@@ -15,9 +15,9 @@ class AccessibilityController(
     private val client: HttpClient
 ) {
 
-    val observable = BehaviorSubject.create<State>()
-    
-    val resultObservable = BehaviorSubject.create<HttpClient.HttpGet>()
+    lateinit var observable: BehaviorSubject<State>
+
+    lateinit var resultObservable: BehaviorSubject<HttpClient.HttpGet>
 
     private val lockedPositions = HashSet<Int>()
 
