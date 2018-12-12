@@ -91,7 +91,7 @@ class ViewHolder(private val adapter: BaseAdapter, private val repository: ApiRe
         PopupMenu(context, view).apply {
             inflate(R.menu.product_menu)
             setOnMenuItemClickListener {
-                menuItemAction.build(it.itemId).perform(repository.get(title))
+                menuItemAction.build(it.itemId).perform(context, repository.get(title))
             }
             show()
         }

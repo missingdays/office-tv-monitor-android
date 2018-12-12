@@ -58,7 +58,7 @@ class DataInputView(
             val url = urlTextView.text.toString()
             if (name.isBlank() || url.isBlank()) return@setPositiveButton
             val data = Data(name, url)
-            repository.set(data.name, data)
+            repository.set(name, data)
             repositoryAdapter.notifyDataSetChanged()
         }
     }
