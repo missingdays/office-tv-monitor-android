@@ -15,7 +15,7 @@ class MainActivityViewModel(
 
     val accessibilityController =
         AccessibilityController(repository, client)
-    val repositoryAdapter = RepositoryAdapter(repository, accessibilityController)
+    val repositoryAdapter = RepositoryAdapter(this)
 
     class Factory(
         private val sharedPreferences: SharedPreferences,

@@ -3,23 +3,21 @@ package health.officetv.jetbrains.org.officetvhealthchecker.main.model
 import android.content.Context
 import android.widget.BaseAdapter
 import androidx.annotation.IdRes
-import androidx.appcompat.app.AlertDialog
 import health.officetv.jetbrains.org.officetvhealthchecker.R
+import health.officetv.jetbrains.org.officetvhealthchecker.main.MainActivityViewModel
 import health.officetv.jetbrains.org.officetvhealthchecker.main.view.DataInputView
 
 abstract class MenuItemAction {
-    abstract fun build(@IdRes id: Int): Action
+    abstract fun buildFactory(@IdRes id: Int): ActionFactory
 }
 
-class ViewHolderMenuItemAction(
-    private val adapter: BaseAdapter,
-    private val repository: ApiRepository
-) : MenuItemAction() {
+class ViewHolderMenuItemAction : MenuItemAction() {
 
-    override fun build(id: Int): Action {
+    override fun buildFactory(id: Int): ActionFactory {
         return when (id) {
-            R.id.product_remove -> RemoveAction(adapter, repository)
-            R.id.product_modify -> ModifyAction(adapter, repository)
+            R.id.product_remove -> RemoveActionFactory()
+            R.id.product_modify -> ModifyActionFactory()
+//            R.id.product_update -> UpdateActionFactory()
             else -> throw IllegalArgumentException("wtf")
         }
     }
@@ -27,6 +25,10 @@ class ViewHolderMenuItemAction(
 
 interface Action {
     fun perform(context: Context, data: Data): Boolean
+}
+
+interface ActionFactory {
+    fun buildAction(mainActivityViewModel: MainActivityViewModel): Action
 }
 
 class RemoveAction(
@@ -40,10 +42,17 @@ class RemoveAction(
     }
 }
 
+class RemoveActionFactory : ActionFactory {
+    override fun buildAction(mainActivityViewModel: MainActivityViewModel): Action {
+        return RemoveAction(mainActivityViewModel.repositoryAdapter, mainActivityViewModel.repository)
+    }
+}
+
+
 class ModifyAction(
     private val adapter: BaseAdapter,
     private val repository: ApiRepository
-): Action {
+) : Action {
 
     override fun perform(context: Context, data: Data): Boolean {
         val dataInputView = DataInputView(context, repository, adapter)
@@ -66,4 +75,27 @@ class ModifyAction(
     }
 }
 
+class ModifyActionFactory : ActionFactory {
+    override fun buildAction(mainActivityViewModel: MainActivityViewModel): Action {
+        return ModifyAction(mainActivityViewModel.repositoryAdapter, mainActivityViewModel.repository)
+    }
+}
 
+
+class UpdateAction(
+    private val mainActivityViewModel: MainActivityViewModel
+) : Action {
+
+    override fun perform(context: Context, data: Data): Boolean {
+        val pos = mainActivityViewModel.repository.getAll().indexOf(data)
+        println("Pos: $pos")
+        mainActivityViewModel.accessibilityController.requestCheck(pos)
+        return true
+    }
+}
+
+class UpdateActionFactory : ActionFactory {
+    override fun buildAction(mainActivityViewModel: MainActivityViewModel): Action {
+        return UpdateAction(mainActivityViewModel)
+    }
+}

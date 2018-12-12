@@ -3,16 +3,15 @@ package health.officetv.jetbrains.org.officetvhealthchecker.main.view
 import android.content.Context
 import android.graphics.Color
 import android.view.View
-import android.widget.BaseAdapter
 import android.widget.PopupMenu
 import android.widget.RelativeLayout
 import android.widget.TextView
 import health.officetv.jetbrains.org.officetvhealthchecker.R
-import health.officetv.jetbrains.org.officetvhealthchecker.main.model.ApiRepository
+import health.officetv.jetbrains.org.officetvhealthchecker.main.MainActivityViewModel
 import health.officetv.jetbrains.org.officetvhealthchecker.main.model.ViewHolderMenuItemAction
 import org.jetbrains.anko.*
 
-class ViewHolder(private val adapter: BaseAdapter, private val repository: ApiRepository) {
+class ViewHolder(private val mainActivityViewModel: MainActivityViewModel) {
 
     fun build(context: Context): View {
         return context.relativeLayout {
@@ -87,11 +86,14 @@ class ViewHolder(private val adapter: BaseAdapter, private val repository: ApiRe
 
     private fun onLongClick(view: View, context: Context): Boolean {
         val title = view.findViewById<TextView>(R.id.text_name).text.toString()
-        val menuItemAction = ViewHolderMenuItemAction(adapter, repository)
+        val menuItemAction = ViewHolderMenuItemAction()
         PopupMenu(context, view).apply {
             inflate(R.menu.product_menu)
             setOnMenuItemClickListener {
-                menuItemAction.build(it.itemId).perform(context, repository.get(title))
+                menuItemAction
+                    .buildFactory(it.itemId)
+                    .buildAction(mainActivityViewModel)
+                    .perform(context, mainActivityViewModel.repository.get(title))
             }
             show()
         }
