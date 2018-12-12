@@ -49,31 +49,6 @@ class MainActivityUI(private val mainActivityViewModel: MainActivityViewModel) :
     }
 
     private fun onFABclick(fab: View) {
-        DataInputView(fab.context).apply {
-            builder.apply {
-                setNegativeButton()
-                setPositiveButton(titleTextView, urlTextView)
-            }.create().show()
-        }
-    }
-
-    private fun AlertDialog.Builder.setNegativeButton() {
-        setNegativeButton(R.string.cancel) { dialog, _ ->
-            dialog.dismiss()
-        }
-    }
-
-    private fun AlertDialog.Builder.setPositiveButton(
-        titleTextView: TextView,
-        urlTextView: TextView
-    ) {
-        setPositiveButton(R.string.add) { _, _ ->
-            val name = titleTextView.text.toString()
-            val url = urlTextView.text.toString()
-            if (name.isBlank() || url.isBlank()) return@setPositiveButton
-            val data = Data(name, url)
-            mainActivityViewModel.repository.set(data.name, data)
-            mainActivityViewModel.repositoryAdapter.notifyDataSetChanged()
-        }
+        DataInputView(fab.context, mainActivityViewModel).builder.create().show()
     }
 }
