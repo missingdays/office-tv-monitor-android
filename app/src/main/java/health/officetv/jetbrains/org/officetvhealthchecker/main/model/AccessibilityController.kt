@@ -16,6 +16,8 @@ class AccessibilityController(
 ) {
 
     val observable = BehaviorSubject.create<State>()
+    
+    val resultObservable = BehaviorSubject.create<HttpClient.HttpGet>()
 
     private val lockedPositions = HashSet<Int>()
 
@@ -60,7 +62,7 @@ class AccessibilityController(
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            HttpClient.HttpGet.BAD
+            HttpClient.HttpGet.generateBadResponse(e.message?: "Something very-very bad happened\n$url")
         }
     }
 

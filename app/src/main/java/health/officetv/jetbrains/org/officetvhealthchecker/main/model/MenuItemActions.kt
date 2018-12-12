@@ -1,11 +1,15 @@
 package health.officetv.jetbrains.org.officetvhealthchecker.main.model
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.widget.BaseAdapter
 import androidx.annotation.IdRes
 import health.officetv.jetbrains.org.officetvhealthchecker.R
 import health.officetv.jetbrains.org.officetvhealthchecker.main.MainActivityViewModel
 import health.officetv.jetbrains.org.officetvhealthchecker.main.view.DataInputView
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 abstract class MenuItemAction {
     abstract fun buildFactory(@IdRes id: Int): ActionFactory
@@ -88,8 +92,12 @@ class UpdateAction(
 
     override fun perform(context: Context, data: Data): Boolean {
         val pos = mainActivityViewModel.repository.getAll().indexOf(data)
-        println("Pos: $pos")
-        mainActivityViewModel.accessibilityController.requestCheckWithLock(pos)
+        GlobalScope.launch {
+            val result = mainActivityViewModel.accessibilityController.requestCheckResult(pos)
+            Handler(Looper.getMainLooper()).post {
+                mainActivityViewModel.accessibilityController.resultObservable.onNext(result)
+            }
+        }
         return true
     }
 }

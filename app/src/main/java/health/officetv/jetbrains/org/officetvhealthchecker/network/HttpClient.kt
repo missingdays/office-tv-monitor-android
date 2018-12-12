@@ -3,6 +3,7 @@ package health.officetv.jetbrains.org.officetvhealthchecker.network
 import com.github.kittinunf.fuel.httpGet
 import java.io.ByteArrayInputStream
 import java.io.InputStream
+import kotlin.random.Random
 
 interface HttpClient {
 
@@ -12,12 +13,14 @@ interface HttpClient {
         fun stream(): InputStream
         fun body(): String
         fun code(): Int
+        fun responseMessage(): String
 
         companion object {
-            val BAD = object : HttpGet {
+            fun generateBadResponse(message: String) = object :HttpGet {
+                override fun responseMessage() = message
                 override fun stream() = ByteArrayInputStream(body().toByteArray())
                 override fun body() = ""
-                override fun code() = 404
+                override fun code() = Random.nextInt(100, 999)
             }
         }
     }
@@ -38,6 +41,10 @@ class FuelHttpClient: HttpClient {
         override fun body() = String(response.third.get())
 
         override fun code() = response.second.statusCode
+
+        override fun responseMessage(): String {
+            return response.second.responseMessage
+        }
     }
 }
 

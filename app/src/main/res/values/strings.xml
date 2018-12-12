@@ -8,4 +8,5 @@
     <string name="modify">Modify</string>
     <string name="apply">Apply</string>
     <string name="update">Update</string>
+    <string name="request_completed_with_code">Request completed with code</string>
 </resources>
