@@ -8,6 +8,7 @@ import health.officetv.jetbrains.org.officetvhealthchecker.network.HttpClient
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.jetbrains.anko.getStackTraceString
 import java.lang.Exception
 import java.lang.StringBuilder
 
@@ -36,7 +37,7 @@ class LogRequest(
             val result = client.get(StringBuilder(data.url).append("/log").toString())
             logs.onNext(result.body())
         } catch (e: Exception) {
-            logs.onNext(e.toString())
+            logs.onNext(e.getStackTraceString())
         }
     }
 }
