@@ -63,9 +63,8 @@ class RepositoryAdapter(private val mainActivityViewModel: MainActivityViewModel
 
     private fun stateIsRefresh(context: Context, resultView: ImageView, progressView: ProgressBar) {
         ProgressBarReverseAnimator(progressView).animate()
-        resultView.visibility = View.GONE
+        ResultViewReverseAnimator(resultView).animate()
     }
-
 
     override fun getItem(position: Int) = repository.getAll()[position]
 
