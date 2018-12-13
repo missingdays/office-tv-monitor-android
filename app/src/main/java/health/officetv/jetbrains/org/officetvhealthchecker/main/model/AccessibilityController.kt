@@ -4,12 +4,6 @@ import health.officetv.jetbrains.org.officetvhealthchecker.network.HttpClient
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.*
 
-sealed class State(val position: Int) {
-    class Refresh(position: Int): State(position)
-    class Fail(position: Int): State(position)
-    class Ok(position: Int): State(position)
-}
-
 class AccessibilityController(
     private val apiRepository: ApiRepository,
     private val client: HttpClient
@@ -64,6 +58,12 @@ class AccessibilityController(
             e.printStackTrace()
             HttpClient.HttpGet.generateBadResponse(e.message?: "Something very-very bad happened\n$url")
         }
+    }
+
+    sealed class State(val position: Int) {
+        class Refresh(position: Int): State(position)
+        class Fail(position: Int): State(position)
+        class Ok(position: Int): State(position)
     }
 
 }

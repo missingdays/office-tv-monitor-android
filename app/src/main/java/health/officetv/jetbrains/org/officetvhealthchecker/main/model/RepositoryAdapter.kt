@@ -37,9 +37,9 @@ class RepositoryAdapter(private val mainActivityViewModel: MainActivityViewModel
                 Handler(Looper.getMainLooper()).post {
 //                    println("$position\t${it.javaClass.simpleName}")
                     when (it) {
-                        is State.Ok -> stateIsOk(parent.context, resultView, progressView)
-                        is State.Fail -> stateIsFail(parent.context, resultView, progressView)
-                        is State.Refresh -> stateIsRefresh(parent.context, resultView, progressView)
+                        is AccessibilityController.State.Ok -> stateIsOk(parent.context, resultView, progressView)
+                        is AccessibilityController.State.Fail -> stateIsFail(parent.context, resultView, progressView)
+                        is AccessibilityController.State.Refresh -> stateIsRefresh(parent.context, resultView, progressView)
                     }
                 }
             }
